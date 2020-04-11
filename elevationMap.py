@@ -35,7 +35,7 @@ def findIndex(x,lis):
     return index-1 # should not arrive here
     
 class ElevationMap:
-    def __init__(self,path="testSmall.txt"):
+    def __init__(self,path="Ardennes.txt"):
         # read data
         data = open(path, "r").read()
         

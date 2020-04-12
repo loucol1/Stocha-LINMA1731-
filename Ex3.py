@@ -35,8 +35,7 @@ sns.jointplot(x=x[0],
               y=x[1],
               kind="kde",
               space=0)
-
-
+plt.show()
 
 '''
 t_f = len(Yt)-1  # final time

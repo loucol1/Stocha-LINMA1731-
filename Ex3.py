@@ -53,8 +53,8 @@ delta_t = np.array([0.01, 0.01])
 
 sqrt_Sigma_e = np.sqrt(Sigma_e)
 
-out_noise_pdf = lambda w: 1/np.sqrt((2*np.pi)**d_y*np.abs(np.linalg.det(Sigma_w))) * np.exp(-.5*(w-mu_w)@np.linalg.inv(Sigma_w)@(w-mu_w))  # pdf of the output noise w_t
-
+out_noise_pdf = lambda w: 1 / (sqrt_Sigma_e * np.sqrt((2 * np.pi))) * np.exp(
+    -.5 * ((w - mu_e) / sqrt_Sigma_e) ** 2)  # pdf of the output noise w_t
 # *** SEQUENTIAL MONTE CARLO METHOD ***
 
 n = int(1e2)  # sample set size. Sugg: 1e2

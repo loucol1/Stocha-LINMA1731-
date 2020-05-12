@@ -9,11 +9,11 @@ def main():
 main()
 
 f2 = open("measures2D.txt", 'r')
-Yt = readline_to_vector(f2)
+Yt = readline_to_vector(f2) # Estimation of the ground elevation
 f2.readline()
-POSITION_X1_t = readline_to_vector(f2)
+POSITION_X1_t = readline_to_vector(f2) #True position of X1
 f2.readline()
-POSITION_X2_t = readline_to_vector(f2)
+POSITION_X2_t = readline_to_vector(f2) #True position of X2
 f2.close()
 Map = ElevationMap("Ardennes.txt")
 
@@ -59,7 +59,7 @@ delta_t = np.array([0.01, 0.01])
 sqrt_Sigma_e = np.sqrt(Sigma_e)
 
 out_noise_pdf = lambda w: 1 / (sqrt_Sigma_e * np.sqrt((2 * np.pi)**2)) * np.exp(
-    -.5 * ((w - mu_e) / sqrt_Sigma_e) ** 2)  # pdf of the output noise w_t
+    -.5 * ((w - mu_e) / sqrt_Sigma_e) ** 2)  # pdf of the output noise e_t
 # *** SEQUENTIAL MONTE CARLO METHOD ***
 
 n = int(1e2)  # sample set size. Sugg: 1e2
@@ -78,7 +78,7 @@ for t in range(t_f):
     # ** Prediction
 
     for i in range(n):
-        w = sample_multivariate(mu_w, Sigma_w) # HIDDEN
+        w = sample_multivariate(mu_w, Sigma_w)
         #w = w.flatten()
         Xtilde[:, i, t + 1] = X[:, i, t] + delta_t*v_t + w
 

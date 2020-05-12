@@ -51,8 +51,8 @@ def exercice2():
     sqrt_Sigma_w = np.sqrt(Sigma_w)
     sqrt_Sigma_e = np.sqrt(Sigma_e)
 
-    out_noise_pdf = lambda w: 1 /(sqrt_Sigma_e * np.sqrt((2 * np.pi)) )* np.exp(
-        -.5 * ((w - mu_e)/sqrt_Sigma_e)**2)  # pdf of the output noise e_t
+    out_noise_pdf = lambda e: 1 /(sqrt_Sigma_e * np.sqrt((2 * np.pi)) )* np.exp(
+        -.5 * ((e - mu_e)/sqrt_Sigma_e)**2)  # pdf of the output noise e_t
 
 
 
@@ -101,10 +101,10 @@ def exercice2():
         print(t)
         # HIDDEN[[
         # Display particles at each time:
-        '''
+
         for i in range(n):
             plt.plot(t, X[0, i, t], 'ro', markersize=1) #red o for all the particles
-        '''
+
         # Display true x at each time:
         plt.plot(t, POSITION_t[t], 'kx') #x black for the true position
         # Display true y at each time:
@@ -139,4 +139,4 @@ print(type(test2))
 '''
 
 
-#exercice2()
+exercice2()

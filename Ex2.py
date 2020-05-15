@@ -2,6 +2,7 @@ from elevationMap import ElevationMap
 import numpy as np
 import random  # for random.choices
 import matplotlib.pyplot as plt
+from scipy import stats
 def main():
     print("coucou")
 main()
@@ -38,7 +39,7 @@ def exercice2():
     t_f = len(Y_t)-1  # final time
     d_x = 1  # dimension of state space;
     d_w = 1  # dimension of w;
-
+    print(t_f)
 
     mu_w = 0
     Sigma_w = np.array([[0.004]])
@@ -94,49 +95,67 @@ def exercice2():
 
     # end for t
 
-
+    error = np.zeros(t_f+1)
     # ** Visualization
     plt.figure(1)
     for t in range(t_f + 1):
-        print(t)
-        # HIDDEN[[
-        # Display particles at each time:
-
-        for i in range(n):
-            plt.plot(t, X[0, i, t], 'ro', markersize=1) #red o for all the particles
-
-        # Display true x at each time:
-        plt.plot(t, POSITION_t[t], 'kx') #x black for the true position
-        # Display true y at each time:
-
-        # plt.plot(t, Y_t[t], 'k>')
-
-        # Compute and display sample mean for each time:
         x_mean = np.zeros((d_x, 1))
         for i in range(n):
             x_mean = x_mean + X[0, i, t]
+        x_mean = x_mean / n #compute the average position of X at time t
+        error[t] = (x_mean[0] - POSITION_t[t]) #compute the error
+        plt.plot(t/100, error[t], 'rx')
 
-        x_mean = x_mean / n
-        plt.plot(t, x_mean[0], 'rx')
-        # HIDDEN]]
-
-    plt.xlabel('t')
-    plt.ylabel('x_t^i, i=1,...,n')
-    plt.title('Sequential Monte Carlo experiment')
+    plt.xlabel('t [s]')
+    plt.ylabel('Error of the estimated value')
+    plt.title('Error of the Monte Carlo estimated value function of time')
     plt.show()
 
-'''
-test = np.zeros((1,2))
-print('test = ', test)
-y = test[:,1]
-print('y = ', type(y))
-A = [1,2,3]
-print(type(A))
-test2 = (np.ndarray(1)+1)*5
-print(test2)
-print(type(test2))
 
-'''
+    #plot the pdf of the particle at different instant
+    bins = np.linspace(-1,1.5,30)
+    total = len(X[0, :, 0])
+    plt.figure(2)
+
+    samples = X[0, :, 0]
+    histogram, bins = np.histogram(samples, bins=bins)
+    bin_centers = 0.5*(bins[1:] + bins[:-1])
+    plt.plot(bin_centers, histogram/total, label="tf = 0")
+
+    samples = X[0,:,25]
+    histogram, bins = np.histogram(samples, bins=bins)
+    bin_centers = 0.5*(bins[1:] + bins[:-1])
+    plt.plot(bin_centers, histogram/total, label="tf = 25")
+
+    samples = X[0,:,49]
+    histogram, bins = np.histogram(samples, bins=bins)
+    bin_centers = 0.5*(bins[1:] + bins[:-1])
+    plt.plot(bin_centers, histogram/total, label="tf = 49")
+    plt.title('PDF of the particle at different instants')
+    plt.xlabel('Position of the particle')
+    plt.ylabel('PDF')
+    plt.legend()
+    plt.show()
+
+    #plot the position of the particle
+    plt.figure(3)
+    for t in range(t_f + 1):
+        x_mean = np.zeros((d_x, 1))
+        for i in range(n):
+            x_mean = x_mean + X[0, i, t]
+            plt.plot(t/100, X[0,i,t],'ro',markersize=1)
+        x_mean = x_mean / n #compute the average position of X at time t
+        plt.plot(t/100, x_mean, 'gx')
+
+    plt.xlabel('t [s]')
+    plt.ylabel('Position of the particle')
+    plt.title('Position of the particle estimatied with the Monte Carlo algorithm function of time')
+    plt.show()
+
+
+
+
+
 
 
 exercice2()

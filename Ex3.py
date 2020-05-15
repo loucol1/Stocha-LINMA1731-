@@ -1,3 +1,4 @@
+#The basis of this code is inspired from the Particle filter python document posted on the moddle course of LINMA1731
 from elevationMap import ElevationMap
 from Ex2 import readline_to_vector
 import numpy as np
@@ -30,18 +31,7 @@ def sample_multivariate(moyenne, covariance):
     n = 1
     u = np.random.normal(loc=0, scale=1, size=2*n).reshape(2, n)
     return (moyenne + np.dot(L, u)).reshape(n, 2)
-'''
-moyenne = np.array([1 ,2]).reshape(2,1)
-covariance = np.array([[2,1],[1,2]])
-x = sample_multivariate(moyenne, covariance)
-print(covariance)
-print(x)
-sns.jointplot(x=x[0],
-              y=x[1],
-              kind="kde",
-              space=0)
-plt.show()
-'''
+
 
 
 t_f = len(Yt)-1  # final time
@@ -67,6 +57,8 @@ X = np.zeros((d_x, n, t_f + 1))  # particles will be stored in X
 Xtilde = np.zeros((d_x, n, t_f + 1))  # to store the predictions
 
 # ** Generate initial sample set {x_0^i,...,x_0^n}:
+# INITIALIZATION PART
+
 
 t = 0
 for i in range(n):
@@ -75,20 +67,20 @@ for i in range(n):
 
 for t in range(t_f):
 
-    # ** Prediction
+    # PROPAGATION PART
 
     for i in range(n):
         w = sample_multivariate(mu_w, Sigma_w)
         #w = w.flatten()
         Xtilde[:, i, t + 1] = X[:, i, t] + delta_t*v_t + w
 
-    # ** Update
-
+    #WEIGHTING PART
     weights = np.zeros(n)
     for i in range(n):
         weights[i] = out_noise_pdf(Yt[t+1] - Map.h(Xtilde[:, i, t + 1]))
 
     # Resample the particles according to the weights:
+    # RESAMPLE PART
     ind_sample = random.choices(population=np.arange(n), weights=weights, k=n)
 
     for i in range(n):

@@ -1,3 +1,4 @@
+#The basis of this code is inspired from the Particle filter python document posted on the moddle course of LINMA1731
 from elevationMap import ElevationMap
 import numpy as np
 import random  # for random.choices
@@ -64,6 +65,7 @@ def exercice2():
     Xtilde = np.zeros((d_x, n, t_f + 1))  # to store the predictions
 
     # ** Generate initial sample set {x_0^i,...,x_0^n}:
+    # INITIALIZATION PART
 
     t = 0
     for i in range(n):
@@ -73,21 +75,19 @@ def exercice2():
 
     for t in range(t_f):
 
-        #print(t)
-        # ** Prediction
+        #PROPAGATION PART
 
         for i in range(n):
             w = mu_w + sqrt_Sigma_w * np.random.randn(d_w, 1)
             Xtilde[:, i, t + 1] = X[:, i, t] + delta_t*v_t + w
 
-        # ** Update
-
-
+        #WEIGHTING PART
         weights = np.zeros(n)
         for i in range(n):
             weights[i] = out_noise_pdf(Y_t[t+1] - Map.h(float(Xtilde[0, i, t + 1])) )# The weights are chosen from the pdf of the noise e_t
 
         # Resample the particles according to the weights:
+        # RESAMPLE PART
         ind_sample = random.choices(population=np.arange(n), weights=weights, k=n)
 
         for i in range(n):
@@ -152,10 +152,6 @@ def exercice2():
     plt.title('Position of the particle estimatied with the Monte Carlo algorithm function of time')
     plt.show()
 
-
-
-
-
-
-
 exercice2()
+
+
